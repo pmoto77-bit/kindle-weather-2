@@ -8,7 +8,7 @@ TOMORROW_FROM="1800"          # from this time on, show tomorrow's picture
 
 LIGHT_ON="0530"                # front light window
 LIGHT_OFF="0800"
-LIGHT_LEVEL="8"                # 0-24
+LIGHT_LEVEL="8"                # 0-25 on a PW3
 
 RETRY_MIN="10"                 # after a failed download, retry this often...
 RETRY_FAST_TRIES="9"           # ...this many times (about 90 minutes),

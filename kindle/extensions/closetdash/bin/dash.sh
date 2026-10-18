@@ -338,7 +338,7 @@ watch_touch() {   # background: append one line per touch gesture to $TAPS ("raw
 			continue
 		fi
 		# the rest of the same gesture: keep reading until the screen has been quiet for ~1 s
-		while more="$(timeout -t 1 dd bs=1024 count=1 <&3 2>/dev/null | hd)" && [ -n "$more" ]; do
+		while more="$($TMO dd bs=1024 count=1 <&3 2>/dev/null | hd)" && [ -n "$more" ]; do
 			ev="$ev
 $more"
 		done
@@ -505,13 +505,19 @@ if [ -f "$RUN/watch.pid" ]; then   # a crashed run's touch reader would double e
 fi
 rm -f "$RUN/light" "$RUN/fails" "$TAPS" "$RUN/dumped"
 log "=== $VERSION starting${CLOSETDASH_BOOT:+ after reboot} (battery $(battery)%)"
-log "ui jobs: $(initctl list 2>/dev/null | grep -e framework -e lab126_gui -e pillow | tr '\n' ';')"
+ui_jobs() {
+	initctl list 2>/dev/null | grep -e framework -e lab126_gui -e pillow -e kppmainapp -e webreader -e statusbar | tr '\n' ';'
+}
+log "ui jobs: $(ui_jobs)"
+if timeout -t 1 true > /dev/null 2>&1; then TMO="timeout -t 1"; else TMO="timeout 1"; fi   # BusyBox 1.17 vs 1.34
 [ -f "$RUN/light_before" ] || lipc-get-prop com.lab126.powerd flIntensity > "$RUN/light_before" 2>/dev/null
-FL_FILE="${CLOSETDASH_FL-$(find /sys/devices/system -name fl_intensity 2>/dev/null | head -n 1)}"
+# light chip: a PW1 has fl_intensity ("FrontLight(Intensity) = N"); a PW3 has a backlight brightness file (N)
+FL_FILE="${CLOSETDASH_FL-$( (find /sys/devices/system -name fl_intensity; ls /sys/class/backlight/*/brightness) 2>/dev/null | head -n 1)}"
 log "light chip: ${FL_FILE:-not found (light can only go down to powerd 0)}"
 
 sleep 3   # let KUAL close
 ui_stop
+log "ui jobs after stop: $(ui_jobs)"
 trap cleanup TERM INT
 sys lipc-set-prop com.lab126.powerd preventScreenSaver 1
 

@@ -58,8 +58,11 @@ If the screen gets crowded, reasons are dropped in the order listed in `reason_p
 
 ## Putting the Kindle program on the Kindle
 1. On github.com, go to the repo and click **Code → Download ZIP**. Unzip it.
-2. Plug in the Kindle. Copy the folder `kindle/extensions/closetdash` into the Kindle's `extensions` folder, next to `MRInstaller`.
-3. Eject the Kindle. Then open **KUAL → Closet Dash**.
+2. Plug in the Kindle. Copy the folder `kindle/extensions/closetdash` into the Kindle's `extensions` folder (create `extensions` if it isn't there).
+3. Copy `kindle/documents/Start Weather.sh` into the Kindle's `documents` folder.
+4. Eject the Kindle. **Start Weather** now appears in the library; tap it to start. (This Kindle runs `.sh` files from the library as root, so KUAL isn't needed. If KUAL is installed, its **Closet Dash** menu works too.)
+
+**Troubleshooting tools** live in `extensions/closetdash/tools/` so the library stays simple. To use one, copy it into `documents`, tap it, then delete it again. See `tools/README.txt`. The tools below are named by their KUAL menu entries; each has a matching `tools/ClosetDash_*.sh`.
 
 **Device check** writes `device-check.txt` with the facts the program depends on (firmware, screen, interface job names, touch device, front light, tools, update status), then runs the download test. It changes nothing on the Kindle.
 

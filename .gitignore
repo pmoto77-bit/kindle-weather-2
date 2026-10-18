@@ -2,3 +2,7 @@ preview/
 site/
 __pycache__/
 *.pyc
+
+# guide output (regenerate with: python docs/guide/make_guide.py)
+docs/guide/*.pdf
+docs/guide/*.png

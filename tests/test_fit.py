@@ -8,7 +8,7 @@ import unittest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "generator"))
 
-from PIL import Image, ImageChops  # noqa: E402
+from PIL import Image, ImageChops, ImageDraw  # noqa: E402
 
 import render   # noqa: E402
 import samples  # noqa: E402
@@ -87,10 +87,18 @@ class TestFit(unittest.TestCase):
                     self.assertEqual((a["fit"], a["wear"]), (b["fit"], b["wear"]))
 
     def test_pw1_size_matches_original_renderer(self):
-        # golden image made by the closet-kindle renderer before scaling was added
-        img, _ = render.render(samples.sample("worst_case"), RULES, PW1)
-        gold = Image.open(os.path.join(ROOT, "tests", "fixtures", "golden_worst_case_758.png"))
-        self.assertIsNone(ImageChops.difference(img, gold.convert("L")).getbbox())
+        # at scale 1, ScaledDraw must draw exactly what plain ImageDraw (the closet-kindle
+        # renderer) draws. Both run here, so font rasterizing differences between
+        # computers can't matter.
+        day = samples.sample("worst_case")
+        img, _ = render.render(day, RULES, PW1)
+        real = render.ScaledDraw
+        render.ScaledDraw = lambda im, s: ImageDraw.Draw(im)
+        try:
+            plain, _ = render.render(day, RULES, PW1)
+        finally:
+            render.ScaledDraw = real
+        self.assertIsNone(ImageChops.difference(img, plain).getbbox())
 
     def test_kindle_buttons_match_screen(self):
         # img/buttons.txt must be regenerated (make_kindle_screens.py) whenever the screen changes
@@ -103,8 +111,8 @@ class TestFit(unittest.TestCase):
             vals = [int(v) for v in r[2:]]
             self.assertTrue(all(0 <= v <= PW for v in vals[0::2]) and all(0 <= v <= PH for v in vals[1::2]), r)
         for name in ("menu", "confirm", "calib_1", "boot"):
-            img = Image.open(os.path.join(os.path.dirname(path), name + ".png"))
-            self.assertEqual(img.size, (PW, PH), name)
+            with Image.open(os.path.join(os.path.dirname(path), name + ".png")) as img:
+                self.assertEqual(img.size, (PW, PH), name)
 
     def test_banner_end_time_wording(self):
         day = samples.sample("winter_storm")

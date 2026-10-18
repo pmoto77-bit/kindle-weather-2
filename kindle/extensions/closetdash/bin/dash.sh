@@ -15,8 +15,8 @@ CACERT="$DIR/cacert.pem"
 IMG="$DIR/img"
 TCONF="$DIR/touch.conf"
 TAPS="$RUN/taps"
-UI_JOBS="kppmainapp framework lab126_gui"   # newer firmware's home app first: stopped on its own it
-                                            # exits cleanly instead of writing a 5 MB crash report
+UI_JOBS="framework lab126_gui"   # on a PW3 this also stops the home app (kppmainapp), which leaves
+                                # a crash report however it is stopped; clear_crash_reports sweeps them
 CRASH_GLOB="${CLOSETDASH_DOCS:-/mnt/us/documents}/KPPMainAppV2_*_crash_*"
 TICK=5
 WARN_SHOWN=""

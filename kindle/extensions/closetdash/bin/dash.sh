@@ -338,7 +338,8 @@ watch_touch() {   # background: append one line per touch gesture to $TAPS ("raw
 			continue
 		fi
 		# the rest of the same gesture: keep reading until the screen has been quiet for ~1 s
-		while more="$($TMO dd bs=1024 count=1 <&3 2>/dev/null | hd)" && [ -n "$more" ]; do
+		# (inner subshell: its "Terminated" notice when timeout stops dd goes to /dev/null)
+		while more="$( ( $TMO dd bs=1024 count=1 <&3 | hd ) 2>/dev/null )" && [ -n "$more" ]; do
 			ev="$ev
 $more"
 		done

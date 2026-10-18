@@ -15,7 +15,9 @@ CACERT="$DIR/cacert.pem"
 IMG="$DIR/img"
 TCONF="$DIR/touch.conf"
 TAPS="$RUN/taps"
-UI_JOBS="framework lab126_gui"
+UI_JOBS="kppmainapp framework lab126_gui"   # newer firmware's home app first: stopped on its own it
+                                            # exits cleanly instead of writing a 5 MB crash report
+CRASH_GLOB="${CLOSETDASH_DOCS:-/mnt/us/documents}/KPPMainAppV2_*_crash_*"
 TICK=5
 WARN_SHOWN=""
 WPID=""
@@ -75,12 +77,35 @@ ui_stop() {   # keeps any list a crashed run left behind, so Exit still restarts
 	done
 }
 
-ui_start() {
+ui_start() {   # same order as before; the home app last, and only if it didn't come back by itself
+	app=""
 	for j in $(state stopped_jobs); do
+		[ "$j" = "kppmainapp" ] && { app=1; continue; }
 		sys start "$j" > /dev/null 2>&1
 		log "started $j"
 	done
+	if [ -n "$app" ]; then
+		i=0
+		while [ $i -lt 10 ] && ! initctl status kppmainapp 2>/dev/null | grep -q running; do
+			sleep 1
+			i=$((i + 1))
+		done
+		if initctl status kppmainapp 2>/dev/null | grep -q running; then
+			log "kppmainapp came back by itself"
+		else
+			sys start kppmainapp > /dev/null 2>&1
+			log "started kppmainapp"
+		fi
+	fi
 	rm -f "$RUN/stopped_jobs"
+}
+
+clear_crash_reports() {   # the home app's crash reports show up as books; they help no one here
+	for f in $CRASH_GLOB; do
+		[ -e "$f" ] || continue
+		rm -rf "$f"
+		log "removed crash report ${f##*/}"
+	done
 }
 
 # ------------------------------------------------------------------ Wi-Fi, clock, downloads
@@ -490,6 +515,7 @@ cleanup() {
 	sys lipc-set-prop com.lab126.powerd flIntensity "$(state light_before 5)"
 	sys lipc-set-prop com.lab126.cmd wirelessEnable 1
 	ui_start
+	clear_crash_reports
 	rm -f "$PIDFILE" "$TAPS" "$RUN/dumped" "$RUN/watch.pid" "$RUN/light_before"
 	log "stopped - back to normal Kindle"
 	exit 0
@@ -519,6 +545,7 @@ log "light chip: ${FL_FILE:-not found (light can only go down to powerd 0)}"
 sleep 3   # let KUAL close
 ui_stop
 log "ui jobs after stop: $(ui_jobs)"
+clear_crash_reports
 trap cleanup TERM INT
 sys lipc-set-prop com.lab126.powerd preventScreenSaver 1
 
@@ -548,6 +575,7 @@ FORCE=1
 while :; do
 	now_vars
 	light
+	[ "$(num "$SECS")" -lt "$TICK" ] && clear_crash_reports   # about once a minute
 	if [ "$(tap_count)" -gt "$TAPS_SEEN" ]; then
 		skip_taps
 		if [ -n "$TOUCH_OK" ]; then

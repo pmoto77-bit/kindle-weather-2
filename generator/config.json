@@ -1,0 +1,17 @@
+{
+  "_read_me": "Settings for the closet Kindle. Coordinates are rounded to city level on purpose (this file is public).",
+  "place": "Grand Rapids",
+  "latitude": 42.96,
+  "longitude": -85.67,
+  "timezone": "America/Detroit",
+  "comfort_offset_f": 0,
+  "_comfort_help": "0 = normal. +5 = 'I run cold' (warmer clothes start 5 degrees sooner). -5 = 'I run warm'.",
+  "screen": {"width": 1072, "height": 1448},
+  "user_agent": "kindle-weather-2 (279580648+pmoto77-bit@users.noreply.github.com)",
+  "windows": [
+    {"key": "morning",   "name": "MORNING",   "label": "7–11 AM", "start": 7,  "end": 11},
+    {"key": "afternoon", "name": "AFTERNOON", "label": "12–5 PM", "start": 12, "end": 16},
+    {"key": "evening",   "name": "EVENING",   "label": "5–10 PM", "start": 17, "end": 22}
+  ],
+  "curve_hours": [6, 22]
+}

@@ -1,0 +1,62 @@
+name: Build closet Kindle images
+
+on:
+  schedule:
+    # Hourly from ~4 AM to ~10 PM Eastern (UTC 08-02). Off-peak minute: GitHub drops or delays
+    # top-of-the-hour runs, so one missed run must not leave the Kindle stale.
+    - cron: "47 8-23,0-2 * * *"
+  workflow_dispatch:        # "Run workflow" button
+  push:
+    branches: [main]
+    paths: ["generator/**"] # re-render right away after editing the rules
+
+permissions:
+  contents: write   # commit data/status.json + history.csv (keeps the schedule active)
+  actions: write    # re-enable this workflow (resets GitHub's 60-day inactivity timer)
+  pages: write
+  id-token: write
+
+concurrency:
+  group: build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Self-tests
+        run: python -m unittest discover -s tests
+      - name: Build images (fails loudly if the forecast can't be downloaded)
+        run: |
+          mkdir -p data
+          python generator/make_dashboard.py --out site --history data/history.csv
+          cp site/status.json data/status.json
+      - name: Commit build log
+        run: |
+          git config user.name "kindle-weather-2 bot"
+          git config user.email "279580648+pmoto77-bit@users.noreply.github.com"
+          git add data/
+          git commit -m "Build log $(date -u +%Y-%m-%dT%H:%MZ)" || echo "Nothing to commit"
+          git push
+      - name: Keep the schedule enabled
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow enable build.yml --repo "$GITHUB_REPOSITORY" || true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

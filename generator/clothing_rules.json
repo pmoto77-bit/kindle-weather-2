@@ -1,0 +1,82 @@
+{
+  "_read_me": [
+    "This file decides what the 'WHAT TO WEAR' list says. Edit the words in quotes or the numbers, then save.",
+    "All temperatures are 'feels like' degrees F, after the comfort setting in config.json is applied.",
+    "warmth_bands: checked top to bottom. The first band whose 'below' number is higher than the temperature is used.",
+    "Words in {curly braces} are filled in automatically - keep them as-is.",
+    "Run preview.bat after editing to see the result before it goes to the Kindle."
+  ],
+
+  "warmth_bands": [
+    {"below": 15,  "wear": "Heaviest coat, hat, gloves, scarf", "evening": "Heaviest coat tonight"},
+    {"below": 32,  "wear": "Winter coat, hat, gloves",          "evening": "Winter coat tonight"},
+    {"below": 45,  "wear": "Warm jacket",                       "evening": "Warm jacket after dark"},
+    {"below": 55,  "wear": "Sweater or fleece",                 "evening": "Sweater after dark"},
+    {"below": 65,  "wear": "Light layer, long sleeves",         "evening": "Light jacket after dark"},
+    {"below": 80,  "wear": "T-shirt weather",                   "evening": "Light layer after dark"},
+    {"below": 999, "wear": "Light, loose clothes",              "evening": null}
+  ],
+
+  "triggers": {
+    "_help": "When a reason line appears under an item. These are the 'hidden drivers'.",
+    "feels_gap": 5,
+    "wind_mph": 20,
+    "gust_mph": 30,
+    "swing": 15,
+    "shed_swing": 10,
+    "shed_min_afternoon": 55,
+    "uv": 6,
+    "heat": 90,
+    "aqi_line": 51,
+    "aqi_item": 151,
+    "rain_pop": 50,
+    "maybe_pop": 30,
+    "snow_pop": 40,
+    "ice_pop": 30,
+    "deep_snow_in": 2,
+    "legs_cool_below": 60,
+    "legs_warm_from": 75,
+    "legs_warm_morning_min": 60
+  },
+
+  "items": {
+    "shed": "{wear}; shed it by {when}",
+    "rain_window": "Rain jacket for {window}",
+    "rain_all_day": "Rain jacket or umbrella",
+    "rain_maybe": "Umbrella, just in case",
+    "rain_windy": "Hooded rain jacket, no umbrella",
+    "snow": "Waterproof boots",
+    "snow_deep": "Snow boots",
+    "ice": "Boots with good grip",
+    "snow_ice": "Snow boots with good grip",
+    "wind": "Windproof outer layer",
+    "uv": "Sunglasses and sunscreen",
+    "heat": "Light, loose clothes; bring water",
+    "aqi": "Limit time outdoors; consider a mask",
+    "legs_cool": "Long pants, closed shoes",
+    "legs_warm": "Shorts weather"
+  },
+
+  "window_words": {"morning": "the morning", "afternoon": "the afternoon", "evening": "tonight"},
+  "shed_words": {"10": "mid-morning", "13": "lunch", "99": "mid-afternoon"},
+
+  "reasons": {
+    "feels": "feels like {feels}° at {time}",
+    "swing": "warms up {n}° by afternoon",
+    "wind": "{dir} gusts to {gust} mph",
+    "rain_start": "starts around {time}",
+    "storm": "thunderstorms around {time}",
+    "snow_amount": "about {inches}\" of snow",
+    "ice": "freezing rain around {time}",
+    "uv": "UV {uv} around {time}",
+    "heat": "feels like {feels}° at {time}",
+    "aqi": "air quality {aqi}, unhealthy"
+  },
+
+  "_reason_priority_help": "If too many reasons fit, the ones at the END of this list are dropped first.",
+  "reason_priority": ["aqi", "ice", "heat", "feels", "wind", "timing", "swing", "uv"],
+  "_item_priority_help": "If too many items, the ones at the END of this list are dropped first.",
+  "item_priority": ["aqi", "ice", "main", "rain", "snow", "wind", "evening", "uv", "legs"],
+  "max_items": 5,
+  "max_reasons": 3
+}

@@ -1,0 +1,7 @@
+# Files that run on the Kindle must keep Unix line endings.
+*.sh                text eol=lf
+kindle/**/*.json    text eol=lf
+kindle/**/*.xml     text eol=lf
+*.pem               text eol=lf
+kindle/**/*.txt     text eol=lf
+kindle/**/*.conf    text eol=lf

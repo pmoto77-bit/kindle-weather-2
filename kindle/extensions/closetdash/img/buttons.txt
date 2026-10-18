@@ -1,0 +1,10 @@
+# screen name x0 y0 x1 y1 in screen pixels (1072x1448; made by generator/make_kindle_screens.py)
+menu refresh 57 240 1015 594
+menu back 57 651 1015 1004
+menu info 57 1174 481 1386
+menu exit 591 1174 1015 1386
+confirm yes 57 212 481 410
+confirm no 57 481 1015 1386
+calib 1 85 85
+calib 2 987 85
+calib 3 85 1363

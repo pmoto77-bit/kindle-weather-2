@@ -1,0 +1,66 @@
+{
+	"items": [
+		{
+			"name": "Closet Dash",
+			"priority": 0,
+			"items": [
+				{
+					"name": "Start (tap screen for menu)",
+					"priority": 1,
+					"action": "/bin/sh",
+					"params": "/mnt/us/extensions/closetdash/bin/start.sh",
+					"exitmenu": true
+				},
+				{
+					"name": "Enable auto-start after restart",
+					"priority": 2,
+					"action": "/bin/sh",
+					"params": "/mnt/us/extensions/closetdash/bin/autostart-on.sh",
+					"exitmenu": true
+				},
+				{
+					"name": "Disable auto-start",
+					"priority": 3,
+					"action": "/bin/sh",
+					"params": "/mnt/us/extensions/closetdash/bin/autostart-off.sh",
+					"exitmenu": true
+				},
+				{
+					"name": "Redo touch setup",
+					"priority": 4,
+					"action": "/bin/sh",
+					"params": "/mnt/us/extensions/closetdash/bin/recalibrate.sh",
+					"exitmenu": true
+				},
+				{
+					"name": "Stop Closet Dash",
+					"priority": 5,
+					"action": "/bin/sh",
+					"params": "/mnt/us/extensions/closetdash/bin/stop.sh",
+					"exitmenu": true
+				},
+				{
+					"name": "Light test (1 minute)",
+					"priority": 7,
+					"action": "/bin/sh",
+					"params": "/mnt/us/extensions/closetdash/bin/light-test.sh",
+					"exitmenu": true
+				},
+				{
+					"name": "Test download",
+					"priority": 6,
+					"action": "/bin/sh",
+					"params": "/mnt/us/extensions/closetdash/bin/test-download.sh",
+					"exitmenu": true
+				},
+				{
+					"name": "Device check (writes device-check.txt)",
+					"priority": 8,
+					"action": "/bin/sh",
+					"params": "/mnt/us/extensions/closetdash/bin/device-check.sh",
+					"exitmenu": true
+				}
+			]
+		}
+	]
+}

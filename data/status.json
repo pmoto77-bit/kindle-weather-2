@@ -1,5 +1,5 @@
 {
-  "built": "2026-10-25T18:49",
+  "built": "2026-10-25T21:44",
   "place": "Grand Rapids",
   "utc_offset_seconds": -14400,
   "sources": {
@@ -26,8 +26,7 @@
     "alerts": [],
     "aqi_max": 62,
     "wear": [
-      "Warm jacket; shed it by mid-morning",
-      "Sweater after dark",
+      "Sweater or fleece",
       "Long pants, closed shoes"
     ],
     "fit": []

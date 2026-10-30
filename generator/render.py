@@ -14,6 +14,7 @@ from datetime import date, datetime
 
 from PIL import Image, ImageDraw, ImageFont
 
+import holidays
 import icons
 from rules import PRECIP_RANK, aqi_line, category, clock, trim_reasons, wear_list
 
@@ -120,6 +121,11 @@ class Canvas:
 
     def width(self, s, f):
         return self.d.textlength(s, font=f)
+
+    def paste(self, im, x, y, w, h):
+        """Paste a grayscale picture into the layout box (x, y, w, h), scaled smoothly."""
+        s = self.d.s
+        self.img.paste(im.resize((round(w * s), round(h * s)), Image.LANCZOS), (round(x * s), round(y * s)))
 
     def rule(self, y, fill=LIGHT, width=2):
         self.d.line([M, y, self.w - M, y], fill=fill, width=width)
@@ -317,6 +323,42 @@ def draw_note(c, y, s):
     return y + 36
 
 
+def _overlaps(a, b, pad=8):
+    return a[0] - pad < b[2] and b[0] < a[2] + pad and a[1] - pad < b[3] and b[1] < a[3] + pad
+
+
+_art = {}
+
+
+def holiday_image(key):
+    """OpenMoji art prepared by make_holiday_art.py (generator/holiday_art/<key>.png), or None."""
+    if key not in _art:
+        path = os.path.join(HERE, "holiday_art", key + ".png")
+        _art[key] = Image.open(path).convert("L") if os.path.exists(path) else None
+    return _art[key]
+
+
+def draw_holiday(c, key, top):
+    """Holiday art in the empty bottom-right corner: the biggest size that fits below `top`
+    without touching any text, or nothing at all (never crammed)."""
+    im, caption = holiday_image(key), holidays.CAPTION[key]
+    if im is None:
+        return None
+    f = font(18, "semi")
+    bottom = c.h - FOOTER_H - 8
+    for s in (150, 125, 100):
+        w = max(s, c.width(caption, f))
+        box = (c.w - M - w, bottom - s - 26, c.w - M, bottom)
+        if box[1] < top or any(_overlaps(box, b) for b, _ in c.boxes):
+            continue
+        k = s / max(im.size)   # fit inside the s x s square, keeping its shape
+        iw, ih = im.width * k, im.height * k
+        c.paste(im, box[2] - w / 2 - iw / 2, box[1] + (s - ih) / 2, iw, ih)
+        c.text((box[2] - w / 2, bottom), caption, f, fill=DARK, anchor="md")
+        return key
+    return None
+
+
 def draw_footer(c, day):
     y = c.h - FOOTER_H
     c.rule(y)
@@ -336,10 +378,12 @@ def compose(day, cfg, state):
         y = draw_curve(c, y, day, cfg, state["curve_h"])
     if state["aqi"]:
         y = draw_aqi(c, y, state["aqi"])
+    wear_top = y
     y = draw_wear(c, y, state["wear"])
     if state["note"]:
         y = draw_note(c, y + 4, state["note"])
     draw_footer(c, day)
+    c.holiday = draw_holiday(c, state["holiday"], wear_top) if state.get("holiday") else None
     return c, y
 
 
@@ -372,10 +416,11 @@ def _fit(day, cfg, rules, base):
 def render(day, rules, cfg):
     """Return (PIL image, info dict). info['fit'] lists any fit-rule steps taken."""
     base = {"banner": banner_text(day), "aqi": aqi_line(day, rules), "note": notes(day),
+            "holiday": holidays.holiday(day["date"]),
             "wear": wear_list(day, rules, cfg)}
     c, bottom, state, actions = _fit(day, cfg, rules, base)
     img = c.img.point(lambda v: (v // 17) * 17)  # e-ink shows 16 gray levels
-    info = {"date": day["date"], "label": day["label"], "fit": actions, "bottom": bottom,
+    info = {"date": day["date"], "label": day["label"], "fit": actions, "bottom": bottom, "holiday": c.holiday,
             "wear": [i["text"] for i in state["wear"]],
             "reasons": [i["reason"] for i in state["wear"] if i["reason"]],
             "banner": state["banner"], "aqi_line": state["aqi"], "boxes": c.boxes}

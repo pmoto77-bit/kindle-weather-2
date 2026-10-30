@@ -1,0 +1,18 @@
+Holiday artwork in this folder
+
+All emojis designed by OpenMoji (https://openmoji.org/) - the open-source emoji and
+icon project. License: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/).
+
+Changes made: the "black" PNG versions were flattened onto a white background,
+converted to grayscale, trimmed and resized for a Kindle e-ink screen
+(generator/make_holiday_art.py). These adapted images are shared under the same
+CC BY-SA 4.0 license. OpenMoji does not endorse this project.
+
+  new_year.png      U+1F386 fireworks
+  valentine.png     U+1F495 two hearts
+  st_patrick.png    U+2618  shamrock
+  easter.png        U+271D  latin cross
+  july4.png         U+1F5FD Statue of Liberty
+  halloween.png     U+1F383 jack-o-lantern
+  thanksgiving.png  U+1F983 turkey
+  christmas.png     U+1F384 Christmas tree

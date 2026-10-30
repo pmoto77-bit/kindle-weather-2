@@ -109,3 +109,7 @@ The menu closes by itself after 15 seconds, and the question after 10. Leaving t
 Kindle screens (menu, confirm, touch setup, boot) are drawn by `generator/make_kindle_screens.py`. It also writes `img/buttons.txt` with the tap areas.
 
 Fonts: Selawik (SIL Open Font License; see `generator/fonts/LICENSE-Selawik.txt`).
+
+**Holiday art.** On New Year's, Valentine's, St. Patrick's, Easter, the 4th of July, Halloween, Thanksgiving and Christmas, a small picture appears in the empty bottom-right corner: on the "tomorrow" screen the evening before and all day on the holiday, only where it fits without touching any text. Dates are in `generator/holidays.py`; the pictures are made once from OpenMoji downloads by `generator/make_holiday_art.py`.
+
+All emojis designed by [OpenMoji](https://openmoji.org/) – the open-source emoji and icon project. License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). The black versions were converted to grayscale, trimmed and resized for e-ink; the adapted images in `generator/holiday_art/` are shared under the same license (see `generator/holiday_art/LICENSE.txt`).

@@ -1,5 +1,5 @@
 {
-  "built": "2026-11-03T22:19",
+  "built": "2026-11-04T11:36",
   "place": "Grand Rapids",
   "utc_offset_seconds": -18000,
   "sources": {
@@ -8,27 +8,29 @@
     "alerts": "ok"
   },
   "today": {
-    "date": "2026-11-03",
-    "hi": 76,
-    "lo": 59,
+    "date": "2026-11-04",
+    "hi": 68,
+    "lo": 53,
     "alerts": [],
-    "aqi_max": 37,
+    "aqi_max": 34,
     "wear": [
-      "Light layer, long sleeves; shed it by lunch",
-      "Shorts weather"
+      "Light layer, long sleeves",
+      "Rain jacket for the afternoon",
+      "Sweater after dark"
     ],
     "fit": []
   },
   "tomorrow": {
-    "date": "2026-11-04",
-    "hi": 68,
-    "lo": 54,
+    "date": "2026-11-05",
+    "hi": 53,
+    "lo": 42,
     "alerts": [],
-    "aqi_max": 35,
+    "aqi_max": 22,
     "wear": [
-      "Light layer, long sleeves",
-      "Umbrella, just in case",
-      "Sweater after dark"
+      "Sweater or fleece",
+      "Rain jacket for the morning",
+      "Warm jacket after dark",
+      "Long pants, closed shoes"
     ],
     "fit": []
   }

@@ -1,5 +1,5 @@
 {
-  "built": "2026-11-08T04:30",
+  "built": "2026-11-08T11:21",
   "place": "Grand Rapids",
   "utc_offset_seconds": -18000,
   "sources": {
@@ -9,10 +9,10 @@
   },
   "today": {
     "date": "2026-11-08",
-    "hi": 57,
-    "lo": 36,
+    "hi": 56,
+    "lo": 37,
     "alerts": [],
-    "aqi_max": 42,
+    "aqi_max": 34,
     "wear": [
       "Warm jacket",
       "Long pants, closed shoes"
@@ -21,10 +21,10 @@
   },
   "tomorrow": {
     "date": "2026-11-09",
-    "hi": 51,
-    "lo": 41,
+    "hi": 52,
+    "lo": 37,
     "alerts": [],
-    "aqi_max": 37,
+    "aqi_max": 32,
     "wear": [
       "Warm jacket",
       "Long pants, closed shoes"

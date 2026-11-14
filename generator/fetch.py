@@ -25,18 +25,29 @@ HOURLY = ("temperature_2m,apparent_temperature,precipitation_probability,precipi
 DAILY = "temperature_2m_max,temperature_2m_min,sunrise,sunset"
 
 
-def get_json(url, params, headers=None, tries=3):
+FORECAST_PATIENCE = 300   # seconds: keep retrying the forecast ~5 min before failing the build
+
+
+def get_json(url, params, headers=None, patience=0, tries=3):
+    """Download JSON. On a network hiccup, retry: at least `tries` times, and keep
+    going until `patience` seconds have passed. Then give up loudly."""
     full = url + "?" + urllib.parse.urlencode(params)
-    last = None
-    for i in range(tries):
+    give_up = time.monotonic() + patience
+    last, n, wait = None, 0, 5
+    while True:
+        n += 1
         try:
             req = urllib.request.Request(full, headers=headers or {})
             with urllib.request.urlopen(req, timeout=30) as r:
                 return json.load(r)
-        except Exception as e:  # network hiccup: retry, then give up loudly
+        except Exception as e:
             last = e
-            time.sleep(3 * (i + 1))
-    raise RuntimeError(f"Could not download {url}: {last}")
+        if n >= tries and time.monotonic() + wait > give_up:
+            break
+        print(f"Try {n} failed for {url}: {last} - trying again in {wait} s", flush=True)
+        time.sleep(wait)
+        wait = min(wait * 2, 30)
+    raise RuntimeError(f"Could not download {url} after {n} tries: {last}")
 
 
 def fetch_all(cfg):
@@ -46,7 +57,7 @@ def fetch_all(cfg):
     forecast = get_json(FORECAST_URL, {
         **loc, "hourly": HOURLY, "daily": DAILY, "timezone": cfg["timezone"],
         "temperature_unit": "fahrenheit", "wind_speed_unit": "mph",
-        "precipitation_unit": "inch", "forecast_days": 3}, ua)
+        "precipitation_unit": "inch", "forecast_days": 3}, ua, patience=FORECAST_PATIENCE)
     sources = {"forecast": "ok"}
     try:
         aqi = get_json(AQI_URL, {**loc, "hourly": "us_aqi", "timezone": cfg["timezone"],

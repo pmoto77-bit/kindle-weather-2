@@ -1,5 +1,5 @@
 {
-  "built": "2026-11-14T12:46",
+  "built": "2026-11-14T15:56",
   "place": "Grand Rapids",
   "utc_offset_seconds": -18000,
   "sources": {
@@ -9,7 +9,7 @@
   },
   "today": {
     "date": "2026-11-14",
-    "hi": 43,
+    "hi": 44,
     "lo": 32,
     "alerts": [],
     "aqi_max": 30,
@@ -21,8 +21,8 @@
   },
   "tomorrow": {
     "date": "2026-11-15",
-    "hi": 41,
-    "lo": 32,
+    "hi": 43,
+    "lo": 34,
     "alerts": [],
     "aqi_max": 32,
     "wear": [
